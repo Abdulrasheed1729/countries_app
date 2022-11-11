@@ -1,8 +1,15 @@
 import 'package:countries_app/core/colors/colors.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  bool _showFooter = false;
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +101,7 @@ class HomePage extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 15.0, vertical: 10),
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 Row(
                                   mainAxisAlignment:
@@ -113,8 +121,13 @@ class HomePage extends StatelessWidget {
                                   ],
                                 ),
                                 const SizedBox(height: 10),
-                                const ExpansionTile(
-                                  title: Text(
+                                ExpansionTile(
+                                  onExpansionChanged: (value) {
+                                    setState(() {
+                                      _showFooter = !_showFooter;
+                                    });
+                                  },
+                                  title: const Text(
                                     'Continent',
                                     style: TextStyle(
                                       color: LightModeColors.gray500,
@@ -129,6 +142,97 @@ class HomePage extends StatelessWidget {
                                     ),
                                   ),
                                 ),
+                                if (_showFooter)
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      // RawMaterialButton(
+                                      //   elevation: 1.0,
+                                      //   fillColor: LightModeColors.grayWarm25,
+                                      //   shape: RoundedRectangleBorder(
+                                      //     side: const BorderSide(
+                                      //       color: LightModeColors.grayWarm900,
+                                      //     ),
+                                      //     borderRadius:
+                                      //         BorderRadius.circular(10.0),
+                                      //   ),
+                                      //   constraints: const BoxConstraints(
+                                      //     maxHeight: 120,
+                                      //     maxWidth: 100,
+                                      //     minHeight: 100,
+                                      //     minWidth: 80,
+                                      //   ),
+                                      //   onPressed: () {},
+                                      //   child: const Text(
+                                      //     'Reset',
+                                      //   ),
+                                      // ),
+                                      // RawMaterialButton(
+                                      //   elevation: 1.0,
+                                      //   fillColor: LightModeColors.grayWarm25,
+                                      //   shape: RoundedRectangleBorder(
+                                      //     side: const BorderSide(
+                                      //       color: LightModeColors.grayWarm900,
+                                      //     ),
+                                      //     borderRadius:
+                                      //         BorderRadius.circular(10.0),
+                                      //   ),
+                                      //   constraints: const BoxConstraints(
+                                      //     maxHeight: 80,
+                                      //     maxWidth: 50,
+                                      //     minHeight: 60,
+                                      //     minWidth: 30,
+                                      //   ),
+                                      //   onPressed: () {},
+                                      //   child: const Text(
+                                      //     'Reset',
+                                      //   ),
+                                      // ),
+                                      ElevatedButton(
+                                        onPressed: () {},
+                                        style: ButtonStyle(
+                                          elevation: MaterialStateProperty
+                                              .resolveWith<double>(
+                                            (states) => 1.0,
+                                          ),
+                                          backgroundColor: MaterialStateProperty
+                                              .resolveWith<Color>(
+                                            (states) =>
+                                                LightModeColors.grayWarm25,
+                                          ),
+                                          foregroundColor: MaterialStateProperty
+                                              .resolveWith<Color>(
+                                            (states) => LightModeColors.gray500,
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          'Reset',
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {},
+                                        style: ButtonStyle(
+                                          elevation: MaterialStateProperty
+                                              .resolveWith<double>(
+                                            (states) => 1.0,
+                                          ),
+                                          backgroundColor: MaterialStateProperty
+                                              .resolveWith<Color>(
+                                            (states) => Colors.orange,
+                                          ),
+                                          foregroundColor: MaterialStateProperty
+                                              .resolveWith<Color>(
+                                            (states) =>
+                                                LightModeColors.grayWarm25,
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          'Show results',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                               ],
                             ),
                           );
