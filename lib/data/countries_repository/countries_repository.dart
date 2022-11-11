@@ -1,4 +1,5 @@
 import 'package:countries_app/data/rest_countries_api/rest_countries_api_client.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../rest_countries_api/models/models.dart';
 
@@ -35,3 +36,7 @@ class CountriesRepository {
         .toList();
   }
 }
+
+final countriesProvider = Provider<CountriesRepository>((ref) {
+  return CountriesRepository();
+});
