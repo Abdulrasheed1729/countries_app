@@ -12,21 +12,24 @@ class RestCountriesApiClient {
   static const _apiUrl = 'https://restcountries.com/v3.1/all';
 
   Future<List<Country>> fetchCountries() async {
-    List<Country> countries = [];
     http.Response response;
+    List body = [];
 
     try {
       response = await _httpClient.get(Uri.parse(_apiUrl));
-      final decodedData = jsonDecode(response.body);
+      body = jsonDecode(response.body) as List;
 
-      countries = List<Country>.from(
-        decodedData.map(
-          (json) => Country.fromJson(json),
-        ),
-      );
+      // countries = List<Country>.from(
+      //   decodedData.map(
+      //     (json) => Country.fromJson(json),
+      //   ),
+      // );
     } catch (e) {
       Exception(e);
     }
-    return countries;
+    return body
+        .map((dynamic item) => Country.fromJson(item as Map<String, dynamic>))
+        .toList();
+    // return countries;
   }
 }
