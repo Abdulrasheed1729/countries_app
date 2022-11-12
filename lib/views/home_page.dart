@@ -41,7 +41,20 @@ class _HomePageState extends State<HomePage> {
           builder: (context, state) {
             switch (state.status) {
               case CountryStatus.failuer:
-                return const Center(child: Text('Something went wrong'));
+                return Center(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Something went wrong'),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () => context.read<CountryBloc>().add(
+                            CountryFetched(),
+                          ),
+                      child: const Text('Refresh'),
+                    ),
+                  ],
+                ));
 
               case CountryStatus.loading:
                 return const Center(child: CircularProgressIndicator());
@@ -164,48 +177,6 @@ class _HomePageState extends State<HomePage> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            // RawMaterialButton(
-                                            //   elevation: 1.0,
-                                            //   fillColor: LightModeColors.grayWarm25,
-                                            //   shape: RoundedRectangleBorder(
-                                            //     side: const BorderSide(
-                                            //       color: LightModeColors.grayWarm900,
-                                            //     ),
-                                            //     borderRadius:
-                                            //         BorderRadius.circular(10.0),
-                                            //   ),
-                                            //   constraints: const BoxConstraints(
-                                            //     maxHeight: 120,
-                                            //     maxWidth: 100,
-                                            //     minHeight: 100,
-                                            //     minWidth: 80,
-                                            //   ),
-                                            //   onPressed: () {},
-                                            //   child: const Text(
-                                            //     'Reset',
-                                            //   ),
-                                            // ),
-                                            // RawMaterialButton(
-                                            //   elevation: 1.0,
-                                            //   fillColor: LightModeColors.grayWarm25,
-                                            //   shape: RoundedRectangleBorder(
-                                            //     side: const BorderSide(
-                                            //       color: LightModeColors.grayWarm900,
-                                            //     ),
-                                            //     borderRadius:
-                                            //         BorderRadius.circular(10.0),
-                                            //   ),
-                                            //   constraints: const BoxConstraints(
-                                            //     maxHeight: 80,
-                                            //     maxWidth: 50,
-                                            //     minHeight: 60,
-                                            //     minWidth: 30,
-                                            //   ),
-                                            //   onPressed: () {},
-                                            //   child: const Text(
-                                            //     'Reset',
-                                            //   ),
-                                            // ),
                                             ElevatedButton(
                                               onPressed: () {},
                                               style: ButtonStyle(
@@ -275,6 +246,31 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                       const SizedBox(height: 10),
+                      Expanded(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: context
+                              .read<CountryBloc>()
+                              .state
+                              .countries
+                              .length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(
+                                context
+                                    .read<CountryBloc>()
+                                    .state
+                                    .countries[index]
+                                    .name!
+                                    .official!,
+                                style: const TextStyle(
+                                  color: LightModeColors.grayWarm900,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      )
                     ],
                   ),
                 );
