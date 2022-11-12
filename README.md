@@ -26,12 +26,14 @@ The state management used for this is the [flutter_riverpod](https://riverpod.de
 
 ## UI design 🎨
 
-The UI design follows the given [design]() in the task 
+The UI design follows the given [design](https://www.figma.com/file/v9AXj4VZNnx26fTthrPbhX/Explore?t=eZh6VKSTgix6yiNJ-0) in the task 
 
 ### Screenshots
-|Home Page|About me Page|
+|Home Page (Light mode)|Detail Page (light mode)|
 |---|---|
-|![Home Page](screenshots/home-page.png "Home page")|![About me Page](screenshots/about-me-page.png "About me page")| 
+|![Home Page (Light mode)](screenshots/light-mode-1.png "Home page")|![Detail Page (light mode)](screenshots/light-mode-2.png "About me page")| 
+|Home Page (Dark mode)|Detail Page (Dark mode)|
+|![Home Page (Dark mode)](screenshots/dark-mode-1.png "Home page")|![Detail Page (dark mode)](screenshots/dark-mode-2.png "Detail page")| 
 
 ## Features
 - Automatic dark and light modes based on the system theme of the device.
@@ -71,13 +73,14 @@ flutter run
 
 Or you can check the appetize link below to see the demo of the app right in your browser.
 
-## Release
-
-[Link to apk file](https://drive.google.com/drive/folders/1M7K-ZzWlAwe21gVsrIYtrk8IdodcqGG4)
-
 ## Appetize Link 🔗
 
-[Link to the appetize demo](https://appetize.io/app/mzy6urnl25kv5e4ldibld4oykq?device=pixel4&osVersion=11.0&scale=75)
+[Link to the appetize demo](https://appetize.io/app/xztfn7fyjk7jrmz7nzkw6wrwn4?device=pixel4&osVersion=11.0&scale=75)
+## Release
+
+[Link to apk file](https://drive.google.com/drive/folders/1ch-3YZ14UPFukr7dv7hh4VBOlQ9l6xTY?usp=sharing)
+
+
 <!-- ## Getting Started
 ![Alt text](https://assets.digitalocean.com/articles/alligator/boo.svg "a title")
 This project is a starting point for a Flutter application.
