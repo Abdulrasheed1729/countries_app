@@ -1,21 +1,16 @@
 import 'package:countries_app/core/colors/colors.dart';
-import 'package:countries_app/cubits/cubits.dart';
+import 'package:countries_app/data/rest_countries_api/rest_countries_api_service.dart';
+import 'package:countries_app/views/details_page.dart';
+import 'package:countries_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  // bool _showFooter = false;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final countriesListAsync = ref.watch(countriesFutureProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -34,249 +29,77 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: BlocProvider(
-        create: (_) =>
-            CountryBloc(httpClient: http.Client())..add(CountryFetched()),
-        child: BlocBuilder<CountryBloc, CountryState>(
-          builder: (context, state) {
-            switch (state.status) {
-              case CountryStatus.failuer:
-                return Center(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+      body: countriesListAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => const Center(child: Text('Error')),
+        data: (countries) {
+          countries.sort((a, b) => a.name!.common!.compareTo(b.name!.common!));
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                const SearchTextField(),
+                const SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Something went wrong'),
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () => context.read<CountryBloc>().add(
-                            CountryFetched(),
-                          ),
-                      child: const Text('Refresh'),
+                    FilteringButton(
+                      label: 'EN',
+                      iconData: Icons.language_outlined,
+                      onTap: () {},
+                    ),
+                    FilteringButton(
+                      iconData: Icons.filter_alt_outlined,
+                      label: 'Filter',
+                      onTap: () {},
                     ),
                   ],
-                ));
-
-              case CountryStatus.loading:
-                return const Center(child: CircularProgressIndicator());
-              case CountryStatus.success:
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 20),
-                      const TextField(
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.search_outlined,
-                            color: LightModeColors.gray500,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                          ),
-                          focusColor: LightModeColors.gray500,
-                          labelText: '',
-                          //TODO update the [TextStyle] here :(
-                          labelStyle: TextStyle(),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          RawMaterialButton(
-                            elevation: 2.0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            fillColor: LightModeColors.grayWarm25,
-                            onPressed: () {},
-                            child: Row(
-                              children: const [
-                                Icon(
-                                  Icons.language_outlined,
-                                  color: LightModeColors.gray500,
-                                ),
-                                SizedBox(width: 5),
-                                Text('EN'),
-                              ],
-                            ),
-                          ),
-                          RawMaterialButton(
-                            elevation: 1.0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            fillColor: LightModeColors.grayWarm25,
-                            onPressed: () {
-                              showModalBottomSheet(
-                                context: context,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(15),
-                                    topRight: Radius.circular(15),
-                                  ),
-                                ),
-                                builder: (ctx) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15.0, vertical: 10),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: const [
-                                            Text(
-                                              'Filter',
-                                              style: TextStyle(
-                                                  color: LightModeColors
-                                                      .grayWarm900,
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                            Icon(
-                                              Icons.cancel_rounded,
-                                              color: LightModeColors.gray500,
-                                            )
-                                          ],
-                                        ),
-                                        const SizedBox(height: 10),
-                                        ExpansionTile(
-                                          onExpansionChanged: (value) {
-                                            setState(() {
-                                              // _showFooter = !_showFooter;
-                                            });
-                                          },
-                                          title: const Text(
-                                            'Continent',
-                                            style: TextStyle(
-                                              color: LightModeColors.gray500,
-                                            ),
-                                          ),
-                                        ),
-                                        const ExpansionTile(
-                                          title: Text(
-                                            'Time Zone',
-                                            style: TextStyle(
-                                              color: LightModeColors.gray500,
-                                            ),
-                                          ),
-                                        ),
-                                        // if (_showFooter)
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            ElevatedButton(
-                                              onPressed: () {},
-                                              style: ButtonStyle(
-                                                elevation: MaterialStateProperty
-                                                    .resolveWith<double>(
-                                                  (states) => 1.0,
-                                                ),
-                                                backgroundColor:
-                                                    MaterialStateProperty
-                                                        .resolveWith<Color>(
-                                                  (states) => LightModeColors
-                                                      .grayWarm25,
-                                                ),
-                                                foregroundColor:
-                                                    MaterialStateProperty
-                                                        .resolveWith<Color>(
-                                                  (states) =>
-                                                      LightModeColors.gray500,
-                                                ),
-                                              ),
-                                              child: const Text(
-                                                'Reset',
-                                              ),
-                                            ),
-                                            ElevatedButton(
-                                              onPressed: () {},
-                                              style: ButtonStyle(
-                                                elevation: MaterialStateProperty
-                                                    .resolveWith<double>(
-                                                  (states) => 1.0,
-                                                ),
-                                                backgroundColor:
-                                                    MaterialStateProperty
-                                                        .resolveWith<Color>(
-                                                  (states) => Colors.orange,
-                                                ),
-                                                foregroundColor:
-                                                    MaterialStateProperty
-                                                        .resolveWith<Color>(
-                                                  (states) => LightModeColors
-                                                      .grayWarm25,
-                                                ),
-                                              ),
-                                              child: const Text(
-                                                'Show results',
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            child: Row(
-                              children: const [
-                                Icon(
-                                  Icons.filter_alt_outlined,
-                                  color: LightModeColors.gray500,
-                                ),
-                                SizedBox(width: 5),
-                                Text('Filter'),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Expanded(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: context
-                              .read<CountryBloc>()
-                              .state
-                              .countries
-                              .length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(
-                                context
-                                    .read<CountryBloc>()
-                                    .state
-                                    .countries[index]
-                                    .name!
-                                    .official!,
-                                style: const TextStyle(
-                                  color: LightModeColors.grayWarm900,
-                                ),
+                ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: countries.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: Container(
+                          height: 35,
+                          width: 35,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.0),
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                countries[index].flags!.png!,
                               ),
-                            );
-                          },
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
-                      )
-                    ],
+                        title: Text(
+                          countries[index].name!.common!,
+                          style: const TextStyle(
+                            color: LightModeColors.grayWarm900,
+                          ),
+                        ),
+                        subtitle: Text(countries[index].capital.toString()),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => DetailPage(
+                                country: countries[index],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
                   ),
-                );
-            }
-          },
-        ),
+                )
+              ],
+            ),
+          );
+        },
       ),
     );
   }
