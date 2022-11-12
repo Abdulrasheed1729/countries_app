@@ -1,4 +1,3 @@
-import 'package:countries_app/core/colors/colors.dart';
 import 'package:flutter/material.dart';
 
 class FilteringButton extends StatelessWidget {
@@ -15,21 +14,25 @@ class FilteringButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return RawMaterialButton(
       elevation: 2.0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5),
       ),
-      fillColor: LightModeColors.grayWarm25,
+      fillColor: theme.scaffoldBackgroundColor,
       onPressed: onTap,
       child: Row(
         children: [
           Icon(
             iconData,
-            color: LightModeColors.gray500,
+            color: theme.appBarTheme.foregroundColor,
           ),
           const SizedBox(width: 5),
-          Text(label),
+          Text(
+            label,
+            style: theme.textTheme.subtitle1,
+          ),
         ],
       ),
     );

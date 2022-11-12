@@ -1,4 +1,3 @@
-import 'package:countries_app/core/colors/colors.dart';
 import 'package:countries_app/data/rest_countries_api/rest_countries_api_service.dart';
 import 'package:countries_app/views/details_page.dart';
 import 'package:countries_app/widgets/widgets.dart';
@@ -11,23 +10,13 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final countriesListAsync = ref.watch(countriesFutureProvider);
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Explore.',
-          style: TextStyle(fontSize: 24, color: LightModeColors.grayWarm900),
         ),
         elevation: 0.0,
-        backgroundColor: LightModeColors.grayWarm25,
-        actions: const [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: Icon(
-              Icons.wb_sunny_outlined,
-              color: LightModeColors.grayWarm900,
-            ),
-          ),
-        ],
       ),
       body: countriesListAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -78,11 +67,12 @@ class HomePage extends ConsumerWidget {
                         ),
                         title: Text(
                           countries[index].name!.common!,
-                          style: const TextStyle(
-                            color: LightModeColors.grayWarm900,
-                          ),
+                          style: theme.textTheme.subtitle1,
                         ),
-                        subtitle: Text(countries[index].capital.toString()),
+                        subtitle: Text(
+                          countries[index].capital.toString(),
+                          style: theme.textTheme.subtitle2,
+                        ),
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(

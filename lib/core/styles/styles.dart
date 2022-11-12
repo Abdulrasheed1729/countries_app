@@ -1,1 +1,1 @@
-class AppStyles {}
+export 'theme.dart';

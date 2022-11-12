@@ -1,4 +1,3 @@
-import 'package:countries_app/core/colors/colors.dart';
 import 'package:flutter/material.dart';
 
 class CountryDetailText extends StatelessWidget {
@@ -10,24 +9,17 @@ class CountryDetailText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       children: [
         Text(
           label,
-          style: const TextStyle(
-            color: LightModeColors.grayWarm900,
-            fontWeight: FontWeight.w500,
-            fontSize: 16,
-          ),
+          style: theme.textTheme.subtitle1,
         ),
         const SizedBox(width: 5),
         Text(
           text,
-          style: const TextStyle(
-            color: LightModeColors.gray500,
-            fontWeight: FontWeight.w400,
-            fontSize: 16,
-          ),
+          style: theme.textTheme.subtitle2,
         ),
       ],
     );
